@@ -7,6 +7,9 @@ url = 'http://jservice.io/api/random'
 
 # play = 'y'
 money = 0
+lowest = 0
+highest = 0
+correct = 0
 
 gametype = input(
     'Enter game type\na - Blitz (5 questions)\nb - Standard (10 questions)\nc - Marathon (20 questions)\n').lower()
@@ -17,6 +20,8 @@ elif gametype == 'c':
     questions_left = 20
 else:
     questions_left = 5
+
+total_questions = questions_left
 
 while questions_left > 0:
     response = requests.get(url)
@@ -59,21 +64,36 @@ while questions_left > 0:
         print(f'Category: {title} - ${value}')
         print(f'Clue: {clue}')
 
-    guess = input("Enter your guess: ")
+    guess = input('Enter your guess: ')
 
     if (guess.lower() in answer.lower() and len(guess)/len(answer) >= .4):
         print(f'Answer: {answer} - You are correct')
         if value != None:
             money += value
+            correct += 1
     else:
         print(f'I\'m sorry, the correct answer is: {answer}')
         if value != None:
             money -= value
 
+    if (money >= highest):
+        highest = money
+
+    if (money <= lowest):
+        lowest = money
+
     questions_left -= 1
 
     if questions_left == 0:
+        print('\n')
         print(f'Game Over. You have finished with ${money}')
+        print('\n')
+        print('Game Stats')
+        print('----------')
+        print(f'You answered {correct} out of {total_questions} questions correctly')
+        print(f'Highest money amount: ${highest}.')
+        print(f'Lowest money amount: ${lowest}.')
+
     else:
         print(f'You have ${money}')
         print(f'{questions_left} question(s) remaining')

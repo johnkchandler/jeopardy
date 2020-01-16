@@ -2,19 +2,33 @@
 import json
 import requests
 import csv
+import os
 from titlecase import titlecase
 
 url = 'http://jservice.io/api/random'
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
-data = open('jeopardy_data.csv', 'r')
-reader = csv.reader(data, delimiter=',')
-for row in reader:
-    saved_money = int(row[0])
-    saved_correct = int(row[1])
-    saved_questions = int(row[2])
+data_file_exists = False
 
-data.close()
+for files in os.walk(dir_path):
+    for file in files:
+        if file == 'jeopardy_data.csv':
+            data_file_exists = True
+
+if (data_file_exists):
+    data = open('jeopardy_data.csv', 'r')
+    reader = csv.reader(data, delimiter=',')
+    for row in reader:
+        saved_money = int(row[0])
+        saved_correct = int(row[1])
+        saved_questions = int(row[2])
+
+    data.close()
+else:
+    saved_money = 0
+    saved_correct = 0
+    saved_questions = 0
 
 money = 0
 lowest = 0

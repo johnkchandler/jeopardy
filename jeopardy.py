@@ -2,21 +2,13 @@
 import json
 import requests
 import csv
-import os
+import os.path
 from titlecase import titlecase
 
 url = 'http://jservice.io/api/random'
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
 
-data_file_exists = False
-
-for files in os.walk(dir_path):
-    for file in files:
-        if file == 'jeopardy_data.csv':
-            data_file_exists = True
-
-if (data_file_exists):
+if(os.path.isfile('jeopardy_data.csv')):
     data = open('jeopardy_data.csv', 'r')
     reader = csv.reader(data, delimiter=',')
     for row in reader:
@@ -114,20 +106,21 @@ while questions_left > 0:
         print('\n')
         print('Game Stats')
         print('----------')
-        print(f'You answered {correct} out of {total_questions} questions correctly.')
+        print(
+            f'You answered {correct} out of {total_questions} questions correctly.')
         print(f'Highest money amount: ${highest}.')
         print(f'Lowest money amount: ${lowest}.')
 
-        
         saved_money += money
         saved_correct += correct
         saved_questions += total_questions
         percentage = round((saved_correct/saved_questions) * 100, 0)
-        
+
         print('\n')
         print('All-time Stats')
         print('--------------')
-        print(f'You have answered {saved_correct} out of {saved_questions} questions correctly. ({percentage}%)')
+        print(
+            f'You have answered {saved_correct} out of {saved_questions} questions correctly. ({percentage}%)')
         print(f'Total money = ${saved_money}.')
 
         write_data = open('jeopardy_data.csv', 'w')

@@ -1,11 +1,21 @@
 #! python3
 import json
 import requests
+import csv
 from titlecase import titlecase
 
 url = 'http://jservice.io/api/random'
 
-# play = 'y'
+
+data = open('jeopardy_data.csv', 'r')
+reader = csv.reader(data, delimiter=',')
+for row in reader:
+    saved_money = int(row[0])
+    saved_correct = int(row[1])
+    saved_questions = int(row[2])
+
+data.close()
+
 money = 0
 lowest = 0
 highest = 0
@@ -90,9 +100,26 @@ while questions_left > 0:
         print('\n')
         print('Game Stats')
         print('----------')
-        print(f'You answered {correct} out of {total_questions} questions correctly')
+        print(f'You answered {correct} out of {total_questions} questions correctly.')
         print(f'Highest money amount: ${highest}.')
         print(f'Lowest money amount: ${lowest}.')
+
+        
+        saved_money += money
+        saved_correct += correct
+        saved_questions += total_questions
+        percentage = round((saved_correct/saved_questions) * 100, 0)
+        
+        print('\n')
+        print('All-time Stats')
+        print('--------------')
+        print(f'You have answered {saved_correct} out of {saved_questions} questions correctly. ({percentage}%)')
+        print(f'Total money = ${saved_money}.')
+
+        write_data = open('jeopardy_data.csv', 'w')
+        writer = csv.writer(write_data, delimiter=',')
+        writer.writerow([saved_money, saved_correct, saved_questions])
+        write_data.close()
 
     else:
         print(f'You have ${money}')

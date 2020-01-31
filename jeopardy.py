@@ -3,6 +3,7 @@ import json
 import requests
 import csv
 import os.path
+import re
 from titlecase import titlecase
 
 url = 'http://jservice.io/api/random'
@@ -46,6 +47,7 @@ while questions_left > 0:
     question = json.loads(response.text)
 
     answer = question[0]['answer'].replace('\\', '')
+    answer = re.sub('<.*?>', '', answer)
     clue = question[0]['question']
     title = titlecase(question[0]['category']['title'])
     value = question[0]['value']
@@ -57,6 +59,7 @@ while questions_left > 0:
         question = json.loads(response.text)
 
         answer = question[0]['answer'].replace('\\', '')
+        answer = re.sub('<.*?>', '', answer)
         clue = question[0]['question']
         title = titlecase(question[0]['category']['title'])
         value = question[0]['value']
